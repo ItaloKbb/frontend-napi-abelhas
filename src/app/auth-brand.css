@@ -1,0 +1,27 @@
+.auth-story-bee {
+  position: absolute;
+  z-index: 1;
+  right: clamp(-2rem, 1vw, 1rem);
+  bottom: clamp(1rem, 4vh, 3rem);
+  width: clamp(9rem, 19vw, 18rem);
+  height: auto;
+  opacity: .96;
+  pointer-events: none;
+  filter: drop-shadow(0 1.25rem 1.2rem color-mix(in oklab, var(--color-neutral) 22%, transparent));
+}
+
+.auth-story-content { padding-right: clamp(5rem, 10vw, 9rem); }
+
+@media (max-width: 1200px) {
+  .auth-story-bee { width: clamp(7rem, 16vw, 11rem); opacity: .75; }
+  .auth-story-content { padding-right: clamp(2rem, 7vw, 5rem); }
+}
+
+@media (max-width: 900px) {
+  .auth-story-bee { right: -.5rem; bottom: -.75rem; width: 7.5rem; opacity: .7; }
+  .auth-story-content { padding-right: 6rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-story-bee { display: none; }
+}

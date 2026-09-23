@@ -1,0 +1,100 @@
+/* Theme-aware overrides and viewport fitting for authentication pages. */
+.auth-shell {
+  --auth-ink: var(--color-base-100);
+  --auth-muted: color-mix(in oklab, var(--color-base-content) 58%, transparent);
+  --auth-line: color-mix(in oklab, var(--color-base-content) 18%, transparent);
+  --auth-honey: var(--color-primary);
+  --auth-honey-dark: color-mix(in oklab, var(--color-primary) 78%, var(--color-secondary));
+  background: var(--color-base-100);
+  color: var(--color-base-content);
+}
+
+.auth-form-panel {
+  background:
+    radial-gradient(circle at 8% 8%, color-mix(in oklab, var(--color-primary) 10%, transparent), transparent 22rem),
+    var(--color-base-100);
+}
+
+.auth-brand,
+.auth-form-header h1,
+.auth-form-header strong,
+.auth-callback h1 { color: var(--color-base-content); }
+.auth-form-card {
+  border-color: var(--auth-line);
+  background: color-mix(in oklab, var(--color-base-200) 68%, transparent);
+  box-shadow: 0 1.5rem 4rem color-mix(in oklab, var(--color-neutral) 18%, transparent);
+}
+.auth-field { color: color-mix(in oklab, var(--color-base-content) 86%, transparent); }
+.auth-field input {
+  border-color: var(--auth-line);
+  background: var(--color-base-100);
+  color: var(--color-base-content);
+}
+.auth-field input::placeholder { color: color-mix(in oklab, var(--color-base-content) 42%, transparent); }
+.auth-field input:hover { border-color: color-mix(in oklab, var(--color-base-content) 35%, transparent); }
+.auth-password-toggle { color: color-mix(in oklab, var(--color-base-content) 52%, transparent); }
+.auth-password-toggle:hover { background: var(--color-base-200); color: var(--color-base-content); }
+.auth-primary-button { border-color: var(--color-primary); background: var(--color-primary); color: var(--color-primary-content); }
+.auth-primary-button:hover:not(:disabled) { background: color-mix(in oklab, var(--color-primary) 86%, var(--color-base-content)); }
+.auth-google-button { border-color: var(--auth-line); }
+.auth-back-button { color: var(--auth-muted); }
+.auth-back-button:hover { color: var(--color-base-content); }
+.auth-otp { color: var(--color-base-content); }
+.auth-otp span { border-color: var(--auth-line); background: var(--color-base-100); }
+.auth-loading { background: var(--color-base-100); color: var(--color-base-content); }
+
+.auth-story-panel {
+  color: var(--color-primary-content);
+  background: linear-gradient(135deg, color-mix(in oklab, var(--color-primary) 78%, white) 0%, var(--color-primary) 48%, var(--auth-honey-dark) 100%);
+}
+.auth-outline-button,
+.auth-story-cta { background: var(--color-neutral); color: var(--color-neutral-content); border-color: var(--color-neutral); }
+.auth-outline-button:hover,
+.auth-story-cta:hover { background: color-mix(in oklab, var(--color-neutral) 82%, black); }
+.auth-benefits li { border-color: color-mix(in oklab, var(--color-primary-content) 28%, transparent); background: color-mix(in oklab, var(--color-primary-content) 14%, transparent); }
+
+@media (min-width: 901px) {
+  .auth-shell { height: 100dvh; min-height: 0; overflow: hidden; }
+  .auth-form-panel,
+  .auth-story-panel { height: 100dvh; min-height: 0; overflow: hidden; }
+  .auth-form-panel { padding: clamp(.85rem, 2.2vh, 1.75rem) clamp(1.25rem, 3vw, 3rem); }
+  .auth-form-stage { min-height: 0; padding: clamp(.35rem, 1.2vh, 1rem) 0; }
+  .auth-form-3d { width: min(100%, 28rem); max-height: 100%; }
+  .auth-form-card { padding: clamp(1rem, 2.4vh, 1.65rem) clamp(1.15rem, 2.6vw, 2rem); }
+  .auth-form-header { margin-bottom: clamp(.65rem, 1.5vh, 1.1rem); }
+  .auth-form-header h1 { font-size: clamp(1.6rem, 3vh, 2.1rem); }
+  .auth-form-header p { margin-top: .4rem; line-height: 1.35; font-size: .88rem; }
+  .auth-kicker { margin-bottom: .4rem; }
+  .auth-google-button,
+  .auth-primary-button { min-height: clamp(2.55rem, 5.5vh, 2.9rem); }
+  .auth-divider { margin: clamp(.55rem, 1.2vh, .9rem) 0; }
+  .auth-form { gap: clamp(.5rem, 1.15vh, .8rem); }
+  .auth-field { gap: .25rem; }
+  .auth-field input { min-height: clamp(2.45rem, 5.3vh, 2.85rem); }
+  .auth-switch { margin-top: clamp(.6rem, 1.3vh, 1rem); }
+  .auth-security-note { align-self: end; }
+  .auth-story-content { padding-block: 1rem; }
+  .auth-story-content h2 { margin-top: clamp(.65rem, 1.4vh, 1rem); font-size: clamp(2.3rem, 4.2vw, 4.25rem); }
+  .auth-story-content > p { margin-top: clamp(.75rem, 1.8vh, 1.25rem); }
+  .auth-benefits { margin-top: clamp(.75rem, 1.8vh, 1.25rem); }
+  .auth-story-cta { min-height: 2.8rem; margin-top: clamp(.85rem, 2vh, 1.5rem); }
+}
+
+@media (max-height: 700px) and (min-width: 901px) {
+  .auth-form-card { padding-block: .85rem; }
+  .auth-form-header { margin-bottom: .55rem; }
+  .auth-form-header p { display: none; }
+  .auth-divider { margin: .45rem 0; }
+  .auth-form { gap: .42rem; }
+  .auth-field input { min-height: 2.35rem; }
+  .auth-google-button,
+  .auth-primary-button { min-height: 2.4rem; }
+  .auth-switch { margin-top: .45rem; }
+  .auth-security-note { display: none; }
+  .auth-benefits { display: none; }
+}
+
+@media (max-width: 900px) {
+  .auth-shell { height: auto; overflow: visible; }
+  .auth-form-panel { min-height: 100dvh; }
+}
