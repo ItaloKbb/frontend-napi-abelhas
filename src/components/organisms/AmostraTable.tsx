@@ -39,7 +39,28 @@ export function AmostraTable({ amostras = [], onSelect }: AmostraTableProps) {
   }
 
   return (
-    <div className="card bg-base-100 shadow-sm overflow-hidden">
+    <div>
+      <div className="space-y-3 sm:hidden">
+        {amostras.map((amostra) => (
+          <button
+            type="button"
+            key={amostra.id}
+            className="card w-full bg-base-100 p-4 text-left shadow-sm transition-colors hover:bg-base-200/30"
+            onClick={() => onSelect?.(amostra)}
+          >
+            <div className="flex min-w-0 items-start justify-between gap-3 border-b border-base-200 pb-3">
+              <span className="min-w-0 break-anywhere font-mono font-semibold">{amostra.nome}</span>
+              <Badge label={statusLabel[amostra.status]} variant={statusVariant[amostra.status]} />
+            </div>
+            <dl className="mt-3 space-y-2 text-sm">
+              <div className="grid grid-cols-[0.8fr_1.2fr] gap-3"><dt className="text-base-content/50">Tipo</dt><dd className="break-anywhere text-right">{amostra.tipoAmostra?.nome ?? amostra.tipoAmostraId}</dd></div>
+              <div className="grid grid-cols-[0.8fr_1.2fr] gap-3"><dt className="text-base-content/50">Produtor</dt><dd className="break-anywhere text-right">{amostra.produtor?.nome ?? amostra.produtorId}</dd></div>
+              <div className="grid grid-cols-[0.8fr_1.2fr] gap-3"><dt className="text-base-content/50">Data da coleta</dt><dd className="text-right">{formatDate(amostra.dataColeta)}</dd></div>
+            </dl>
+          </button>
+        ))}
+      </div>
+      <div className="card hidden bg-base-100 shadow-sm overflow-hidden sm:block">
       <div className="overflow-x-auto">
         <table className="table w-full">
           <thead>
@@ -72,6 +93,7 @@ export function AmostraTable({ amostras = [], onSelect }: AmostraTableProps) {
             ))}
           </tbody>
         </table>
+      </div>
       </div>
     </div>
   );

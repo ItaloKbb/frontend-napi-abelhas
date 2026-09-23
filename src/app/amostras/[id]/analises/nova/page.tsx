@@ -102,7 +102,7 @@ export default function NovaAnalisePage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center gap-3">
+      <div className="flex min-w-0 flex-wrap items-center gap-3">
         <button
           className="btn btn-ghost btn-sm btn-square"
           onClick={() => router.push(`/amostras/${params.id}`)}
@@ -124,7 +124,7 @@ export default function NovaAnalisePage() {
         {/* Form */}
         <div className="lg:col-span-2 space-y-6">
           <div className="card bg-base-100 shadow-sm">
-            <div className="card-body">
+            <div className="card-body p-4 sm:p-6">
               <h2 className="font-bold text-lg mb-1">Dados da Análise</h2>
               <p className="text-sm text-base-content/50 mb-5">
                 Selecione o tipo de análise e o responsável pelo laudo.
@@ -160,7 +160,7 @@ export default function NovaAnalisePage() {
                   required
                 />
 
-                <div className="flex gap-2 mt-4">
+                <div className="mt-4 flex flex-col gap-2 [&>*]:w-full sm:flex-row sm:[&>*]:w-auto">
                   <Button type="submit" loading={loading}>
                     Criar análise
                   </Button>
@@ -180,7 +180,7 @@ export default function NovaAnalisePage() {
         {/* File Upload Sidebar */}
         <div className="space-y-6">
           <div className="card bg-base-100 shadow-sm">
-            <div className="card-body">
+            <div className="card-body p-4 sm:p-6">
               <h2 className="font-bold text-lg mb-1">Documentos</h2>
               <p className="text-sm text-base-content/50 mb-4">
                 Laudos, relatórios, fotos e outros arquivos da análise.

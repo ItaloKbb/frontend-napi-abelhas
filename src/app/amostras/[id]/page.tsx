@@ -92,7 +92,7 @@ export default function AmostraDetailPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center gap-3">
+      <div className="flex min-w-0 flex-wrap items-center gap-3">
         <button className="btn btn-ghost btn-sm btn-square" onClick={() => router.push("/amostras")}>
           <svg xmlns="http://www.w3.org/2000/svg" className="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
         </button>
@@ -144,7 +144,7 @@ export default function AmostraDetailPage() {
 
       {/* Analyses Section */}
       <div className="space-y-4">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h2 className="text-lg font-bold tracking-tight">Análises Laboratoriais</h2>
             <p className="text-sm text-base-content/60">
@@ -153,7 +153,7 @@ export default function AmostraDetailPage() {
           </div>
           <Link
             href={`/amostras/${amostra.id}/analises/nova`}
-            className="btn btn-primary btn-sm"
+            className="btn btn-primary btn-sm min-h-11 w-full sm:w-auto"
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
             Nova Análise
@@ -174,7 +174,26 @@ export default function AmostraDetailPage() {
           </div>
         ) : (
           <div className="card bg-base-100 shadow-sm overflow-hidden">
-            <div className="overflow-x-auto">
+            <div className="divide-y divide-base-200 sm:hidden">
+              {analises.map((analise) => {
+                const fileCount = analise.fileGroups?.reduce((acc, fg) => acc + (fg.files?.length ?? 0), 0) ?? 0;
+                return (
+                  <article key={analise.id} className="p-4">
+                    <div className="flex items-start justify-between gap-3">
+                      <h3 className="min-w-0 break-anywhere font-semibold">{analise.tipoAnalise?.nome ?? analise.tipoAnaliseId}</h3>
+                      {analise.status && <span className={`badge badge-sm shrink-0 ${analiseStatusBadge[analise.status]}`}>{analiseStatusLabel[analise.status]}</span>}
+                    </div>
+                    <dl className="mt-3 space-y-2 text-sm">
+                      <div className="grid grid-cols-[0.8fr_1.2fr] gap-3"><dt className="text-base-content/50">Responsável</dt><dd className="break-anywhere text-right">{analise.responsavel?.nome ?? analise.responsavelId}</dd></div>
+                      <div className="grid grid-cols-[0.8fr_1.2fr] gap-3"><dt className="text-base-content/50">Documentos</dt><dd className="text-right">{fileCount} arquivo(s)</dd></div>
+                      <div className="grid grid-cols-[0.8fr_1.2fr] gap-3"><dt className="text-base-content/50">Data</dt><dd className="text-right">{analise.createdAt ? formatDate(analise.createdAt) : "—"}</dd></div>
+                    </dl>
+                    <Link href={`/amostras/${amostra.id}/analises/${analise.id}`} className="btn btn-ghost mt-4 min-h-11 w-full">Ver detalhes</Link>
+                  </article>
+                );
+              })}
+            </div>
+            <div className="hidden overflow-x-auto sm:block">
               <table className="table w-full">
                 <thead>
                   <tr className="bg-base-200/60">

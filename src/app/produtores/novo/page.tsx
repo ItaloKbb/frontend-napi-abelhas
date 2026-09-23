@@ -66,8 +66,8 @@ export default function NovoProdutorPage() {
     <div className="space-y-6">
       <h1 className="text-2xl font-bold tracking-tight">Novo Produtor</h1>
 
-      <div className="card bg-base-100 shadow-sm max-w-xl">
-        <div className="card-body">
+      <div className="card w-full max-w-xl bg-base-100 shadow-sm">
+        <div className="card-body p-4 sm:p-6">
           {error && (
             <div role="alert" className="alert alert-error shadow-sm">
               <svg xmlns="http://www.w3.org/2000/svg" className="size-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
@@ -95,7 +95,7 @@ export default function NovoProdutorPage() {
               onChange={(e) => setCidadeId(e.target.value)}
             />
 
-            <div className="flex gap-2 mt-4">
+            <div className="mt-4 flex flex-col gap-2 [&>*]:w-full sm:flex-row sm:[&>*]:w-auto">
               <Button type="submit" loading={loading}>
                 Criar produtor
               </Button>

@@ -38,9 +38,9 @@ export default function LoginPage() {
 
   return (
     <div className="hero min-h-screen bg-base-200">
-      <div className="hero-content flex-col w-full max-w-md">
+      <div className="hero-content w-full max-w-md flex-col px-4">
         <div className="text-center">
-          <h1 className="text-4xl font-bold">🍯 NAPI Abelhas</h1>
+          <h1 className="text-3xl font-bold sm:text-4xl">🍯 NAPI Abelhas</h1>
           <p className="py-4 text-base-content/70">
             Sistema de Gestão de Amostras Apícolas
           </p>

@@ -54,13 +54,27 @@ export default function UsuariosAdminPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h1 className="text-2xl font-bold tracking-tight">Usuários da Organização</h1>
         <span className="badge badge-info">{members.length} membros</span>
       </div>
 
       <div className="card bg-base-100 shadow-sm overflow-hidden">
-        <div className="overflow-x-auto">
+        <div className="divide-y divide-base-200 sm:hidden">
+          {members.map((m) => (
+            <article key={m.id} className="p-4">
+              <div className="flex min-w-0 items-center gap-3">
+                <div className="avatar"><div className="w-10 rounded-full"><img src={m.publicUserData.imageUrl} alt={m.publicUserData.firstName ?? ""} /></div></div>
+                <div className="min-w-0 flex-1">
+                  <h2 className="truncate font-semibold">{[m.publicUserData.firstName, m.publicUserData.lastName].filter(Boolean).join(" ") || "—"}</h2>
+                  <p className="break-anywhere text-sm text-base-content/60">{m.publicUserData.identifier}</p>
+                </div>
+                <span className={`badge badge-sm ${m.role === "org:admin" ? "badge-primary" : "badge-ghost"}`}>{roleLabels[m.role] ?? m.role}</span>
+              </div>
+            </article>
+          ))}
+        </div>
+        <div className="hidden overflow-x-auto sm:block">
           <table className="table w-full">
             <thead>
               <tr className="bg-base-200/60">
@@ -72,7 +86,7 @@ export default function UsuariosAdminPage() {
             <tbody>
               {members.map((m) => (
                 <tr key={m.id} className="hover:bg-base-200/30 transition-colors">
-                  <td className="flex items-center gap-3">
+                  <td className="flex min-w-0 flex-wrap items-center gap-3">
                     <div className="avatar">
                       <div className="w-8 rounded-full">
                         <img

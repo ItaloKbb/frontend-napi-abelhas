@@ -152,7 +152,7 @@ export function FileUpload({
           {uploading.map((u) => (
             <div
               key={u.id}
-              className="flex items-center gap-3 rounded-lg bg-base-200/40 px-4 py-3"
+              className="flex min-w-0 items-center gap-3 rounded-lg bg-base-200/40 px-3 py-3 sm:px-4"
             >
               <FileIcon type={u.type} />
               <div className="flex-1 min-w-0">
@@ -189,7 +189,7 @@ export function FileUpload({
           {existingFiles.map((f) => (
             <div
               key={f.id}
-              className="flex items-center gap-3 rounded-lg bg-base-200/40 px-4 py-3"
+              className="flex min-w-0 items-center gap-3 rounded-lg bg-base-200/40 px-3 py-3 sm:px-4"
             >
               <FileIcon type={f.type} />
               <p className="text-sm font-medium truncate flex-1">

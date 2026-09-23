@@ -24,16 +24,16 @@ export default function ProdutoresPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h1 className="text-2xl font-bold tracking-tight">Produtores</h1>
-        <a href="/produtores/novo" className="btn btn-primary btn-sm">
+        <a href="/produtores/novo" className="btn btn-primary btn-sm min-h-11 w-full sm:w-auto">
           <svg xmlns="http://www.w3.org/2000/svg" className="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
           Novo Produtor
         </a>
       </div>
 
       <div className="card bg-base-200/50 p-4">
-        <div className="flex items-center gap-4">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
           <div className="flex-1">
             <SearchBar
               placeholder="Buscar produtores…"
@@ -70,7 +70,18 @@ export default function ProdutoresPage() {
       ) : (
         <>
           <div className="card bg-base-100 shadow-sm overflow-hidden">
-            <div className="overflow-x-auto">
+            <div className="divide-y divide-base-200 sm:hidden">
+              {produtores.map((p) => (
+                <article key={p.id} className="p-4">
+                  <h2 className="break-anywhere font-semibold">{p.nome}</h2>
+                  <div className="mt-2 grid grid-cols-[0.7fr_1.3fr] gap-3 text-sm">
+                    <span className="text-base-content/50">Cidade</span>
+                    <span className="break-anywhere text-right">{p.cidade ? ` – ` : "—"}</span>
+                  </div>
+                </article>
+              ))}
+            </div>
+            <div className="hidden overflow-x-auto sm:block">
               <table className="table w-full">
                 <thead>
                   <tr className="bg-base-200/60">
@@ -94,20 +105,20 @@ export default function ProdutoresPage() {
             </div>
 
             {totalPages > 1 && (
-              <div className="flex items-center justify-between border-t border-base-200 px-4 py-3">
+              <div className="flex flex-col gap-3 border-t border-base-200 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
                 <span className="text-sm text-base-content/50">
                   Página {page} de {totalPages}
                 </span>
-                <div className="join">
+                <div className="join w-full sm:w-auto">
                   <button
-                    className="join-item btn btn-sm"
+                    className="join-item btn btn-sm min-h-11 flex-1 sm:flex-none"
                     disabled={page <= 1}
                     onClick={() => setPage(page - 1)}
                   >
                     ‹ Anterior
                   </button>
                   <button
-                    className="join-item btn btn-sm"
+                    className="join-item btn btn-sm min-h-11 flex-1 sm:flex-none"
                     disabled={page >= totalPages}
                     onClick={() => setPage(page + 1)}
                   >

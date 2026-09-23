@@ -30,7 +30,7 @@ export default function PerfilPage() {
 
       {/* Dados do Usuário */}
       <div className="card bg-base-100 shadow-sm">
-        <div className="card-body">
+        <div className="card-body p-4 sm:p-6">
           <h2 className="card-title text-lg">Informações Pessoais</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
             <div>
@@ -39,19 +39,19 @@ export default function PerfilPage() {
             </div>
             <div>
               <p className="text-xs text-base-content/50 uppercase tracking-wider">E-mail</p>
-              <p className="font-medium">
+              <p className="break-anywhere font-medium">
                 {user?.primaryEmailAddress?.emailAddress ?? "—"}
               </p>
             </div>
             <div>
               <p className="text-xs text-base-content/50 uppercase tracking-wider">ID</p>
-              <p className="font-mono text-sm">{user?.id}</p>
+              <p className="break-anywhere font-mono text-sm">{user?.id}</p>
             </div>
             <div>
               <p className="text-xs text-base-content/50 uppercase tracking-wider">
                 Criado em
               </p>
-              <p className="font-medium">
+              <p className="break-anywhere font-medium">
                 {user?.createdAt
                   ? new Date(user.createdAt).toLocaleDateString("pt-BR")
                   : "—"}
@@ -63,7 +63,7 @@ export default function PerfilPage() {
 
       {/* Organização */}
       <div className="card bg-base-100 shadow-sm">
-        <div className="card-body">
+        <div className="card-body p-4 sm:p-6">
           <h2 className="card-title text-lg">Organização</h2>
           {organization ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
@@ -73,7 +73,7 @@ export default function PerfilPage() {
               </div>
               <div>
                 <p className="text-xs text-base-content/50 uppercase tracking-wider">Slug</p>
-                <p className="font-mono text-sm">{organization.slug}</p>
+                <p className="break-anywhere font-mono text-sm">{organization.slug}</p>
               </div>
               <div>
                 <p className="text-xs text-base-content/50 uppercase tracking-wider">
@@ -87,7 +87,7 @@ export default function PerfilPage() {
                 <p className="text-xs text-base-content/50 uppercase tracking-wider">
                   ID da Org
                 </p>
-                <p className="font-mono text-sm">{organization.id}</p>
+                <p className="break-anywhere font-mono text-sm">{organization.id}</p>
               </div>
             </div>
           ) : (

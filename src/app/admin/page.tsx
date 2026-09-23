@@ -34,7 +34,7 @@ export default function AdminPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <Link href={ROUTES.ADMIN_USUARIOS} className="card bg-base-100 shadow-sm hover:shadow-lg transition-shadow cursor-pointer">
-          <div className="card-body">
+          <div className="card-body p-4 sm:p-6">
             <h2 className="card-title">👥 Usuários</h2>
             <p className="text-base-content/60">
               Gerencie os membros da organização, convide novos usuários e
@@ -44,42 +44,42 @@ export default function AdminPage() {
         </Link>
 
         <Link href={ROUTES.ADMIN_CIDADES_IBGE} className="card bg-base-100 shadow-sm hover:shadow-lg transition-shadow cursor-pointer">
-          <div className="card-body">
+          <div className="card-body p-4 sm:p-6">
             <h2 className="card-title">🏙️ Cidades IBGE</h2>
             <p className="text-base-content/60">Consulte os dados de referência de cidades do IBGE.</p>
           </div>
         </Link>
 
         <Link href={ROUTES.ADMIN_TIPOS_AMOSTRA} className="card bg-base-100 shadow-sm hover:shadow-lg transition-shadow cursor-pointer">
-          <div className="card-body">
+          <div className="card-body p-4 sm:p-6">
             <h2 className="card-title">🧪 Tipos de Amostra</h2>
             <p className="text-base-content/60">Cadastre e gerencie os tipos de amostra disponíveis.</p>
           </div>
         </Link>
 
         <Link href={ROUTES.ADMIN_TIPOS_ANALISE} className="card bg-base-100 shadow-sm hover:shadow-lg transition-shadow cursor-pointer">
-          <div className="card-body">
+          <div className="card-body p-4 sm:p-6">
             <h2 className="card-title">🔬 Tipos de Análise</h2>
             <p className="text-base-content/60">Cadastre e gerencie os tipos de análise disponíveis.</p>
           </div>
         </Link>
 
         <Link href={ROUTES.ADMIN_ABELHAS} className="card bg-base-100 shadow-sm hover:shadow-lg transition-shadow cursor-pointer">
-          <div className="card-body">
+          <div className="card-body p-4 sm:p-6">
             <h2 className="card-title">🐝 Abelhas</h2>
             <p className="text-base-content/60">Cadastre espécies de abelhas com informações taxonômicas.</p>
           </div>
         </Link>
 
         <Link href={ROUTES.ADMIN_PONTOS_COLETA} className="card bg-base-100 shadow-sm hover:shadow-lg transition-shadow cursor-pointer">
-          <div className="card-body">
+          <div className="card-body p-4 sm:p-6">
             <h2 className="card-title">📍 Pontos de Coleta</h2>
             <p className="text-base-content/60">Gerencie os pontos de coleta com coordenadas geográficas.</p>
           </div>
         </Link>
 
         <Link href={ROUTES.ADMIN_RESPONSAVEIS} className="card bg-base-100 shadow-sm hover:shadow-lg transition-shadow cursor-pointer">
-          <div className="card-body">
+          <div className="card-body p-4 sm:p-6">
             <h2 className="card-title">👤 Responsáveis</h2>
             <p className="text-base-content/60">Cadastre responsáveis pelas análises e coletas.</p>
           </div>

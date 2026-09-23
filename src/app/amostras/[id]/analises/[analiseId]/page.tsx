@@ -168,7 +168,7 @@ export default function AnaliseDetailPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center gap-3">
+      <div className="flex min-w-0 flex-wrap items-center gap-3">
         <button
           className="btn btn-ghost btn-sm btn-square"
           onClick={() => router.push(`/amostras/${params.id}`)}
@@ -176,7 +176,7 @@ export default function AnaliseDetailPage() {
           <svg xmlns="http://www.w3.org/2000/svg" className="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
         </button>
         <div className="flex-1">
-          <div className="flex items-center gap-2">
+          <div className="flex min-w-0 flex-wrap items-center gap-2">
             <h1 className="text-2xl font-bold tracking-tight">
               {analise.tipoAnalise?.nome ?? "Análise"}
             </h1>
@@ -190,7 +190,7 @@ export default function AnaliseDetailPage() {
           </p>
         </div>
         <button
-          className="btn btn-error btn-sm btn-outline"
+          className="btn btn-error btn-sm btn-outline min-h-11 w-full sm:w-auto"
           onClick={() => setConfirmDelete(true)}
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
@@ -253,8 +253,8 @@ export default function AnaliseDetailPage() {
 
           {/* Documents Section */}
           <div className="card bg-base-100 shadow-sm">
-            <div className="card-body">
-              <div className="flex items-center justify-between mb-4">
+            <div className="card-body p-4 sm:p-6">
+              <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <h2 className="font-bold text-lg">Documentos e Laudos</h2>
                   <p className="text-sm text-base-content/50">
@@ -276,7 +276,7 @@ export default function AnaliseDetailPage() {
                   {allFiles.map((file) => (
                     <div
                       key={file.id}
-                      className="flex items-center gap-3 rounded-lg bg-base-200/40 px-4 py-3 hover:bg-base-200/60 transition-colors"
+                      className="flex min-w-0 items-center gap-2 rounded-lg bg-base-200/40 px-3 py-3 hover:bg-base-200/60 transition-colors"
                     >
                       <FileTypeIcon type={file.type} />
                       <div className="flex-1 min-w-0">

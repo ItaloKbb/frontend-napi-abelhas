@@ -19,16 +19,16 @@ export default function AmostraPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h1 className="text-2xl font-bold tracking-tight">Amostras</h1>
-        <a href="/amostras/nova" className="btn btn-primary btn-sm">
+        <a href="/amostras/nova" className="btn btn-primary btn-sm min-h-11 w-full sm:w-auto">
           <svg xmlns="http://www.w3.org/2000/svg" className="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
           Nova Amostra
         </a>
       </div>
 
       <div className="card bg-base-200/50 p-4">
-        <div className="flex items-center gap-4">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
           <div className="flex-1">
             <SearchBar
               placeholder="Buscar amostras…"
@@ -59,20 +59,20 @@ export default function AmostraPage() {
           <AmostraTable amostras={amostras} onSelect={(a) => router.push(`/amostras/${a.id}`)} />
 
           {totalPages > 1 && (
-            <div className="flex items-center justify-between border-t border-base-200 px-4 py-3">
+            <div className="flex flex-col gap-3 border-t border-base-200 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
               <span className="text-sm text-base-content/50">
                 Página {page} de {totalPages}
               </span>
-              <div className="join">
+              <div className="join w-full sm:w-auto">
                 <button
-                  className="join-item btn btn-sm"
+                  className="join-item btn btn-sm min-h-11 flex-1 sm:flex-none"
                   disabled={page <= 1}
                   onClick={() => setPage(page - 1)}
                 >
                   ‹ Anterior
                 </button>
                 <button
-                  className="join-item btn btn-sm"
+                  className="join-item btn btn-sm min-h-11 flex-1 sm:flex-none"
                   disabled={page >= totalPages}
                   onClick={() => setPage(page + 1)}
                 >

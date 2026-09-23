@@ -72,8 +72,8 @@ export default function CidadesIbgePage() {
       </div>
 
       <div className="card bg-base-200/50 p-4">
-        <div className="flex gap-4 flex-wrap items-end">
-          <div className="w-64">
+        <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end sm:gap-4">
+          <div className="w-full sm:w-64">
             <Input
               type="search"
               placeholder="Buscar cidade…"
@@ -84,7 +84,7 @@ export default function CidadesIbgePage() {
           <fieldset className="fieldset">
             <legend className="fieldset-legend">Estado</legend>
             <select
-              className="select"
+              className="select w-full sm:w-auto"
               value={estado}
               onChange={(e) => setEstado(e.target.value)}
             >
@@ -134,7 +134,21 @@ export default function CidadesIbgePage() {
         </div>
       ) : (
         <div className="card bg-base-100 shadow-sm overflow-hidden">
-          <div className="overflow-x-auto max-h-[60vh]">
+          <div className="max-h-[60vh] divide-y divide-base-200 overflow-y-auto sm:hidden">
+            {filteredCidades.length === 0 ? (
+              <div className="p-6 text-center text-base-content/50">Nenhuma cidade encontrada</div>
+            ) : filteredCidades.slice(0, 200).map((c) => (
+              <article key={c.id} className="p-4">
+                <h2 className="font-semibold">{c.cidade} – {c.estado}</h2>
+                <dl className="mt-2 grid grid-cols-2 gap-2 text-sm">
+                  <dt className="text-base-content/50">Região</dt><dd className="text-right">{c.regiao}</dd>
+                  <dt className="text-base-content/50">Bioma</dt><dd className="break-anywhere text-right">{c.bioma ?? "—"}</dd>
+                </dl>
+              </article>
+            ))}
+            {filteredCidades.length > 200 && <p className="p-4 text-center text-sm text-base-content/50">Mostrando 200 de {filteredCidades.length}; refine a busca para ver mais.</p>}
+          </div>
+          <div className="hidden overflow-x-auto max-h-[60vh] sm:block">
             <table className="table table-pin-rows w-full">
               <thead>
                 <tr className="bg-base-200/60">

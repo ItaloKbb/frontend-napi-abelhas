@@ -3,13 +3,49 @@
   themes: all;
 }
 
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+body { min-width: 320px; }
+
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.break-anywhere { overflow-wrap: anywhere; }
+
+ (max-width: 639px) {
+  .modal { padding: 0.75rem; }
+  .modal-box {
+    width: 100%;
+    max-height: calc(100dvh - 1.5rem);
+    padding: 1.25rem;
+  }
+  .modal-action {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+  .modal-action > * {
+    width: 100%;
+    min-height: 2.75rem;
+  }
+}
+
 /* Clerk + DaisyUI theme integration */
 .cl-rootBox {
+  width: 100%;
+  max-width: 100%;
   font-family: inherit;
   color: var(--color-base-content);
 }
 
+.cl-cardBox,
 .cl-card {
+  max-width: 100%;
   background-color: var(--color-base-100);
   color: var(--color-base-content);
   border-radius: var(--radius-box);

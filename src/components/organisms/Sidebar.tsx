@@ -30,7 +30,14 @@ const roleLabels: Record<string, string> = {
   "org:member": "Membro",
 };
 
-export function Sidebar() {
+interface SidebarProps {
+  id?: string;
+  className?: string;
+  mobile?: boolean;
+  onClose?: () => void;
+}
+
+export function Sidebar({ id, className = "", mobile = false, onClose }: SidebarProps) {
   const pathname = usePathname();
   const { user } = useUser();
   const { organization, membership } = useOrganization();
@@ -39,9 +46,14 @@ export function Sidebar() {
   const isAdmin = orgRole === "org:admin";
 
   return (
-    <aside className="min-h-screen w-64 bg-base-200 flex flex-col">
-      <div className="px-6 py-5 text-xl font-bold tracking-wide border-b border-base-300">
-        🍯 NAPI Abelhas
+    <aside id={id} className={`h-dvh w-[min(20rem,88vw)] shrink-0 flex-col overflow-y-auto bg-base-200 lg:w-64 ${className}`.trim()} aria-label="Navegação principal">
+      <div className="flex items-center justify-between border-b border-base-300 px-5 py-4">
+        <span className="text-xl font-bold tracking-wide">🍯 NAPI Abelhas</span>
+        {mobile && (
+          <button type="button" autoFocus className="btn btn-ghost btn-square min-h-11 min-w-11" aria-label="Fechar menu" onClick={onClose}>
+            <span aria-hidden="true" className="text-xl">✕</span>
+          </button>
+        )}
       </div>
 
       {organization && (
@@ -66,6 +78,7 @@ export function Sidebar() {
             <Link
               href={href}
               className={pathname.startsWith(href) ? "active" : ""}
+              onClick={onClose}
             >
               {label}
             </Link>
@@ -76,6 +89,7 @@ export function Sidebar() {
           <Link
             href={ROUTES.PERFIL}
             className={pathname === ROUTES.PERFIL ? "active" : ""}
+            onClick={onClose}
           >
             Meu Perfil
           </Link>
@@ -91,6 +105,7 @@ export function Sidebar() {
                 <Link
                   href={href}
                   className={pathname === href ? "active" : ""}
+                  onClick={onClose}
                 >
                   {label}
                 </Link>
@@ -104,6 +119,7 @@ export function Sidebar() {
                 <Link
                   href={href}
                   className={pathname === href ? "active" : ""}
+                  onClick={onClose}
                 >
                   {label}
                 </Link>

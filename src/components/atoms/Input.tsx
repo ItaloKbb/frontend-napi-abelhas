@@ -13,7 +13,7 @@ export function Input({ label, error, className = "", id, ...rest }: InputProps)
       )}
       <input
         id={id}
-        className={`input ${error ? "input-error" : ""} ${className}`.trim()}
+        className={`input w-full ${error ? "input-error" : ""} ${className}`.trim()}
         {...rest}
       />
       {error && <p className="fieldset-label text-error">{error}</p>}

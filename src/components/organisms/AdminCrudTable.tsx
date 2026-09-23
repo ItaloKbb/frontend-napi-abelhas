@@ -8,6 +8,8 @@ export interface Column<T> {
   key: string;
   label: string;
   render?: (item: T) => React.ReactNode;
+  mobileLabel?: string;
+  hideOnMobile?: boolean;
 }
 
 export interface SelectOption {
@@ -183,7 +185,7 @@ export function AdminCrudTable<T extends { id: string }>({
             <p className="text-sm text-base-content/60 mt-1">{description}</p>
           )}
         </div>
-        <Button size="sm" onClick={openCreate} className="gap-1 self-start sm:self-auto">
+        <Button size="sm" onClick={openCreate} className="min-h-11 w-full gap-1 sm:w-auto sm:self-auto">
           <svg xmlns="http://www.w3.org/2000/svg" className="size-4" viewBox="0 0 20 20" fill="currentColor">
             <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
           </svg>
@@ -229,7 +231,43 @@ export function AdminCrudTable<T extends { id: string }>({
           <span className="text-sm text-base-content/40">Carregando…</span>
         </div>
       ) : (
-        <div className="card bg-base-100 shadow-sm overflow-hidden">
+        <div className="space-y-4">
+          <div className="space-y-3 sm:hidden">
+            {items.length === 0 ? (
+              <div className="card bg-base-100 p-6 text-center shadow-sm">
+                <p className="font-medium text-base-content/60">Nenhum registro encontrado</p>
+                <p className="mt-1 text-sm text-base-content/40">{search ? "Tente uma busca diferente." : "Comece criando um novo registro."}</p>
+                {!search && <Button size="sm" variant="ghost" onClick={openCreate} className="mt-4 w-full">+ Criar primeiro registro</Button>}
+              </div>
+            ) : items.map((item) => (
+              <article key={item.id} className="card bg-base-100 p-4 shadow-sm">
+                <dl className="space-y-3">
+                  {columns.filter((col) => !col.hideOnMobile).map((col, index) => (
+                    <div key={col.key} className={index === 0 ? "border-b border-base-200 pb-3" : "grid grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] gap-3"}>
+                      <dt className="text-xs font-semibold uppercase tracking-wider text-base-content/50">{col.mobileLabel ?? col.label}</dt>
+                      <dd className={`${index === 0 ? "mt-1 text-base font-semibold" : "text-sm text-right"} min-w-0 break-anywhere`}>
+                        {col.render ? col.render(item) : String((item as Record<string, unknown>)[col.key] ?? "—")}
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+                <div className="mt-4 grid grid-cols-2 gap-2 border-t border-base-200 pt-3">
+                  <button className="btn btn-ghost min-h-11" onClick={() => openEdit(item)}>Editar</button>
+                  <button className="btn btn-ghost min-h-11 text-error" onClick={() => setDeleteTarget(item)}>Excluir</button>
+                </div>
+              </article>
+            ))}
+            {totalPages > 1 && (
+              <div className="space-y-2 pt-2 text-center">
+                <span className="text-xs text-base-content/50">Página {page} de {totalPages}</span>
+                <div className="grid grid-cols-2 gap-2">
+                  <button className="btn btn-sm min-h-11" disabled={page <= 1} onClick={() => setPage(page - 1)}>‹ Anterior</button>
+                  <button className="btn btn-sm min-h-11" disabled={page >= totalPages} onClick={() => setPage(page + 1)}>Próxima ›</button>
+                </div>
+              </div>
+            )}
+          </div>
+          <div className="card hidden bg-base-100 shadow-sm overflow-hidden sm:block">
           <div className="overflow-x-auto">
             <table className="table w-full">
               <thead>
@@ -334,6 +372,7 @@ export function AdminCrudTable<T extends { id: string }>({
               </div>
             </div>
           )}
+        </div>
         </div>
       )}
 
