@@ -24,17 +24,24 @@ export const storageService = {
     file: File,
     folder = "uploads"
   ): Promise<{ key: string; url: string }> {
+    const contentType = file.type || "application/octet-stream";
     const { url, key } = await this.getUploadUrl(
       file.name,
-      file.type,
+      contentType,
       folder
     );
 
-    await fetch(url, {
+    const response = await fetch(url, {
       method: "PUT",
       body: file,
-      headers: { "Content-Type": file.type },
+      headers: { "Content-Type": contentType },
     });
+
+    if (!response.ok) {
+      throw new Error(
+        `Falha no upload (${response.status} ${response.statusText})`
+      );
+    }
 
     return { key, url: key };
   },

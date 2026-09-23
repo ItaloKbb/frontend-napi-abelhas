@@ -81,11 +81,13 @@ export function FileUpload({
             )
           );
           onFileUploaded({ url: key, type: entry.type });
-        } catch {
+        } catch (error) {
+          const errorMsg =
+            error instanceof Error ? error.message : "Falha no upload";
           setUploading((prev) =>
             prev.map((u) =>
               u.id === entry.id
-                ? { ...u, status: "error", errorMsg: "Falha no upload" }
+                ? { ...u, status: "error", errorMsg }
                 : u
             )
           );
