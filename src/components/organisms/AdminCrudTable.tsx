@@ -22,7 +22,13 @@ export interface SelectOption {
 export interface FieldConfig {
   key: string;
   label: string;
-  type?: "text" | "number" | "checkbox" | "select" | "searchable-select" | "coordinates";
+  type?:
+    | "text"
+    | "number"
+    | "checkbox"
+    | "select"
+    | "searchable-select"
+    | "coordinates";
   latitudeKey?: string;
   longitudeKey?: string;
   required?: boolean;
@@ -32,7 +38,11 @@ export interface FieldConfig {
 }
 
 export interface CrudService<T> {
-  list(params: { page?: number; pageSize?: number; search?: string }): Promise<PaginatedResponse<T> | T[]>;
+  list(params: {
+    page?: number;
+    pageSize?: number;
+    search?: string;
+  }): Promise<PaginatedResponse<T> | T[]>;
   create(payload: Record<string, unknown>): Promise<T>;
   update(id: string, payload: Record<string, unknown>): Promise<T>;
   remove(id: string): Promise<void>;
@@ -69,7 +79,9 @@ export function AdminCrudTable<T extends { id: string }>({
 
   const [deleteTarget, setDeleteTarget] = useState<T | null>(null);
   const [deleting, setDeleting] = useState(false);
-  const [selectOptions, setSelectOptions] = useState<Record<string, SelectOption[]>>({});
+  const [selectOptions, setSelectOptions] = useState<
+    Record<string, SelectOption[]>
+  >({});
 
   const fetchItems = useCallback(
     async (p = page, s = search) => {
@@ -105,18 +117,22 @@ export function AdminCrudTable<T extends { id: string }>({
 
   useEffect(() => {
     for (const f of fields) {
-      if ((f.type === "select" || f.type === "searchable-select") && f.loadOptions && !selectOptions[f.key]) {
+      if (
+        (f.type === "select" || f.type === "searchable-select") &&
+        f.loadOptions &&
+        !selectOptions[f.key]
+      ) {
         f.loadOptions()
           .then((opts) =>
             setSelectOptions((prev) => ({ ...prev, [f.key]: opts })),
           )
           .catch((loadError: unknown) => {
             const message = (loadError as { message?: string })?.message;
-            setError(message ?? `Erro ao carregar opções de .`);
+            setError(message ?? "Erro ao carregar opções de " + f.label + ".");
           });
       }
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const openCreate = () => {
@@ -141,10 +157,14 @@ export function AdminCrudTable<T extends { id: string }>({
       if (f.type === "coordinates") {
         const latitudeKey = f.latitudeKey ?? "latitude";
         const longitudeKey = f.longitudeKey ?? "longitude";
-        data[latitudeKey] = (item as Record<string, unknown>)[latitudeKey] ?? "";
-        data[longitudeKey] = (item as Record<string, unknown>)[longitudeKey] ?? "";
+        data[latitudeKey] =
+          (item as Record<string, unknown>)[latitudeKey] ?? "";
+        data[longitudeKey] =
+          (item as Record<string, unknown>)[longitudeKey] ?? "";
       } else {
-        data[f.key] = (item as Record<string, unknown>)[f.key] ?? (f.type === "checkbox" ? false : "");
+        data[f.key] =
+          (item as Record<string, unknown>)[f.key] ??
+          (f.type === "checkbox" ? false : "");
       }
     }
     setFormData(data);
@@ -162,12 +182,24 @@ export function AdminCrudTable<T extends { id: string }>({
           const longitudeKey = f.longitudeKey ?? "longitude";
           const latitudeValue = formData[latitudeKey];
           const longitudeValue = formData[longitudeKey];
-          if (latitudeValue === "" || latitudeValue == null || longitudeValue === "" || longitudeValue == null) {
+          if (
+            latitudeValue === "" ||
+            latitudeValue == null ||
+            longitudeValue === "" ||
+            longitudeValue == null
+          ) {
             throw new Error("Selecione uma localização no mapa.");
           }
           const latitude = Number(latitudeValue);
           const longitude = Number(longitudeValue);
-          if (!Number.isFinite(latitude) || latitude < -90 || latitude > 90 || !Number.isFinite(longitude) || longitude < -180 || longitude > 180) {
+          if (
+            !Number.isFinite(latitude) ||
+            latitude < -90 ||
+            latitude > 90 ||
+            !Number.isFinite(longitude) ||
+            longitude < -180 ||
+            longitude > 180
+          ) {
             throw new Error("Informe coordenadas geográficas válidas.");
           }
           payload[latitudeKey] = latitude;
@@ -227,9 +259,22 @@ export function AdminCrudTable<T extends { id: string }>({
         </div>
         <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
           {headerActions}
-          <Button size="sm" onClick={openCreate} className="min-h-11 w-full gap-1 sm:w-auto sm:self-auto">
-            <svg xmlns="http://www.w3.org/2000/svg" className="size-4" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
+          <Button
+            size="sm"
+            onClick={openCreate}
+            className="min-h-11 w-full gap-1 sm:w-auto sm:self-auto"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="size-4"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fillRule="evenodd"
+                d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+                clipRule="evenodd"
+              />
             </svg>
             Novo registro
           </Button>
@@ -259,11 +304,25 @@ export function AdminCrudTable<T extends { id: string }>({
       {/* Error Alert */}
       {error && (
         <div role="alert" className="alert alert-error shadow-sm">
-          <svg xmlns="http://www.w3.org/2000/svg" className="size-5 shrink-0" viewBox="0 0 20 20" fill="currentColor">
-            <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="size-5 shrink-0"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fillRule="evenodd"
+              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+              clipRule="evenodd"
+            />
           </svg>
           <span>{error}</span>
-          <button className="btn btn-ghost btn-xs" onClick={() => setError(null)}>✕</button>
+          <button
+            className="btn btn-ghost btn-xs"
+            onClick={() => setError(null)}
+          >
+            ✕
+          </button>
         </div>
       )}
 
@@ -278,144 +337,249 @@ export function AdminCrudTable<T extends { id: string }>({
           <div className="space-y-3 sm:hidden">
             {items.length === 0 ? (
               <div className="card bg-base-100 p-6 text-center shadow-sm">
-                <p className="font-medium text-base-content/60">Nenhum registro encontrado</p>
-                <p className="mt-1 text-sm text-base-content/40">{search ? "Tente uma busca diferente." : "Comece criando um novo registro."}</p>
-                {!search && <Button size="sm" variant="ghost" onClick={openCreate} className="mt-4 w-full">+ Criar primeiro registro</Button>}
+                <p className="font-medium text-base-content/60">
+                  Nenhum registro encontrado
+                </p>
+                <p className="mt-1 text-sm text-base-content/40">
+                  {search
+                    ? "Tente uma busca diferente."
+                    : "Comece criando um novo registro."}
+                </p>
+                {!search && (
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={openCreate}
+                    className="mt-4 w-full"
+                  >
+                    + Criar primeiro registro
+                  </Button>
+                )}
               </div>
-            ) : items.map((item) => (
-              <article key={item.id} className="card bg-base-100 p-4 shadow-sm">
-                <dl className="space-y-3">
-                  {columns.filter((col) => !col.hideOnMobile).map((col, index) => (
-                    <div key={col.key} className={index === 0 ? "border-b border-base-200 pb-3" : "grid grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] gap-3"}>
-                      <dt className="text-xs font-semibold uppercase tracking-wider text-base-content/50">{col.mobileLabel ?? col.label}</dt>
-                      <dd className={`${index === 0 ? "mt-1 text-base font-semibold" : "text-sm text-right"} min-w-0 break-anywhere`}>
-                        {col.render ? col.render(item) : String((item as Record<string, unknown>)[col.key] ?? "—")}
-                      </dd>
-                    </div>
-                  ))}
-                </dl>
-                <div className="mt-4 grid grid-cols-2 gap-2 border-t border-base-200 pt-3">
-                  <button className="btn btn-ghost min-h-11" onClick={() => openEdit(item)}>Editar</button>
-                  <button className="btn btn-ghost min-h-11 text-error" onClick={() => setDeleteTarget(item)}>Excluir</button>
-                </div>
-              </article>
-            ))}
+            ) : (
+              items.map((item) => (
+                <article
+                  key={item.id}
+                  className="card bg-base-100 p-4 shadow-sm"
+                >
+                  <dl className="space-y-3">
+                    {columns
+                      .filter((col) => !col.hideOnMobile)
+                      .map((col, index) => (
+                        <div
+                          key={col.key}
+                          className={
+                            index === 0
+                              ? "border-b border-base-200 pb-3"
+                              : "grid grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] gap-3"
+                          }
+                        >
+                          <dt className="text-xs font-semibold uppercase tracking-wider text-base-content/50">
+                            {col.mobileLabel ?? col.label}
+                          </dt>
+                          <dd
+                            className={`${index === 0 ? "mt-1 text-base font-semibold" : "text-sm text-right"} min-w-0 break-anywhere`}
+                          >
+                            {col.render
+                              ? col.render(item)
+                              : String(
+                                  (item as Record<string, unknown>)[col.key] ??
+                                    "—",
+                                )}
+                          </dd>
+                        </div>
+                      ))}
+                  </dl>
+                  <div className="mt-4 grid grid-cols-2 gap-2 border-t border-base-200 pt-3">
+                    <button
+                      className="btn btn-ghost min-h-11"
+                      onClick={() => openEdit(item)}
+                    >
+                      Editar
+                    </button>
+                    <button
+                      className="btn btn-ghost min-h-11 text-error"
+                      onClick={() => setDeleteTarget(item)}
+                    >
+                      Excluir
+                    </button>
+                  </div>
+                </article>
+              ))
+            )}
             {totalPages > 1 && (
               <div className="space-y-2 pt-2 text-center">
-                <span className="text-xs text-base-content/50">Página {page} de {totalPages}</span>
+                <span className="text-xs text-base-content/50">
+                  Página {page} de {totalPages}
+                </span>
                 <div className="grid grid-cols-2 gap-2">
-                  <button className="btn btn-sm min-h-11" disabled={page <= 1} onClick={() => setPage(page - 1)}>‹ Anterior</button>
-                  <button className="btn btn-sm min-h-11" disabled={page >= totalPages} onClick={() => setPage(page + 1)}>Próxima ›</button>
+                  <button
+                    className="btn btn-sm min-h-11"
+                    disabled={page <= 1}
+                    onClick={() => setPage(page - 1)}
+                  >
+                    ‹ Anterior
+                  </button>
+                  <button
+                    className="btn btn-sm min-h-11"
+                    disabled={page >= totalPages}
+                    onClick={() => setPage(page + 1)}
+                  >
+                    Próxima ›
+                  </button>
                 </div>
               </div>
             )}
           </div>
           <div className="card hidden bg-base-100 shadow-sm overflow-hidden sm:block">
-          <div className="overflow-x-auto">
-            <table className="table w-full">
-              <thead>
-                <tr className="bg-base-200/60">
-                  {columns.map((col) => (
-                    <th key={col.key} className="text-xs uppercase tracking-wider font-semibold text-base-content/70">
-                      {col.label}
+            <div className="overflow-x-auto">
+              <table className="table w-full">
+                <thead>
+                  <tr className="bg-base-200/60">
+                    {columns.map((col) => (
+                      <th
+                        key={col.key}
+                        className="text-xs uppercase tracking-wider font-semibold text-base-content/70"
+                      >
+                        {col.label}
+                      </th>
+                    ))}
+                    <th className="w-24 text-xs uppercase tracking-wider font-semibold text-base-content/70">
+                      Ações
                     </th>
-                  ))}
-                  <th className="w-24 text-xs uppercase tracking-wider font-semibold text-base-content/70">
-                    Ações
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {items.length === 0 ? (
-                  <tr>
-                    <td
-                      colSpan={columns.length + 1}
-                      className="text-center py-16"
-                    >
-                      <div className="flex flex-col items-center gap-3">
-                        <div className="size-16 rounded-full bg-base-200 flex items-center justify-center">
-                          <svg xmlns="http://www.w3.org/2000/svg" className="size-8 text-base-content/30" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
-                          </svg>
-                        </div>
-                        <div>
-                          <p className="font-medium text-base-content/50">Nenhum registro encontrado</p>
-                          <p className="text-sm text-base-content/30 mt-1">
-                            {search ? "Tente uma busca diferente." : "Comece criando um novo registro."}
-                          </p>
-                        </div>
-                        {!search && (
-                          <Button size="sm" variant="ghost" onClick={openCreate} className="mt-1">
-                            + Criar primeiro registro
-                          </Button>
-                        )}
-                      </div>
-                    </td>
                   </tr>
-                ) : (
-                  items.map((item) => (
-                    <tr key={item.id} className="hover:bg-base-200/30 transition-colors">
-                      {columns.map((col) => (
-                        <td key={col.key}>
-                          {col.render
-                            ? col.render(item)
-                            : String((item as Record<string, unknown>)[col.key] ?? "")}
-                        </td>
-                      ))}
-                      <td>
-                        <div className="flex gap-1">
-                          <button
-                            className="btn btn-ghost btn-xs btn-square tooltip tooltip-left"
-                            data-tip="Editar"
-                            onClick={() => openEdit(item)}
-                          >
-                            <svg xmlns="http://www.w3.org/2000/svg" className="size-4" viewBox="0 0 20 20" fill="currentColor">
-                              <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                </thead>
+                <tbody>
+                  {items.length === 0 ? (
+                    <tr>
+                      <td
+                        colSpan={columns.length + 1}
+                        className="text-center py-16"
+                      >
+                        <div className="flex flex-col items-center gap-3">
+                          <div className="size-16 rounded-full bg-base-200 flex items-center justify-center">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="size-8 text-base-content/30"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                              strokeWidth={1.5}
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
+                              />
                             </svg>
-                          </button>
-                          <button
-                            className="btn btn-ghost btn-xs btn-square text-error tooltip tooltip-left"
-                            data-tip="Excluir"
-                            onClick={() => setDeleteTarget(item)}
-                          >
-                            <svg xmlns="http://www.w3.org/2000/svg" className="size-4" viewBox="0 0 20 20" fill="currentColor">
-                              <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
-                            </svg>
-                          </button>
+                          </div>
+                          <div>
+                            <p className="font-medium text-base-content/50">
+                              Nenhum registro encontrado
+                            </p>
+                            <p className="text-sm text-base-content/30 mt-1">
+                              {search
+                                ? "Tente uma busca diferente."
+                                : "Comece criando um novo registro."}
+                            </p>
+                          </div>
+                          {!search && (
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={openCreate}
+                              className="mt-1"
+                            >
+                              + Criar primeiro registro
+                            </Button>
+                          )}
                         </div>
                       </td>
                     </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
-
-          {/* Pagination */}
-          {totalPages > 1 && (
-            <div className="flex items-center justify-between border-t border-base-200 px-4 py-3">
-              <span className="text-xs text-base-content/50">
-                Página {page} de {totalPages}
-              </span>
-              <div className="join">
-                <button
-                  className="join-item btn btn-sm btn-ghost"
-                  disabled={page <= 1}
-                  onClick={() => setPage(page - 1)}
-                >
-                  ‹ Anterior
-                </button>
-                <button
-                  className="join-item btn btn-sm btn-ghost"
-                  disabled={page >= totalPages}
-                  onClick={() => setPage(page + 1)}
-                >
-                  Próxima ›
-                </button>
-              </div>
+                  ) : (
+                    items.map((item) => (
+                      <tr
+                        key={item.id}
+                        className="hover:bg-base-200/30 transition-colors"
+                      >
+                        {columns.map((col) => (
+                          <td key={col.key}>
+                            {col.render
+                              ? col.render(item)
+                              : String(
+                                  (item as Record<string, unknown>)[col.key] ??
+                                    "",
+                                )}
+                          </td>
+                        ))}
+                        <td>
+                          <div className="flex gap-1">
+                            <button
+                              className="btn btn-ghost btn-xs btn-square tooltip tooltip-left"
+                              data-tip="Editar"
+                              onClick={() => openEdit(item)}
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="size-4"
+                                viewBox="0 0 20 20"
+                                fill="currentColor"
+                              >
+                                <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                              </svg>
+                            </button>
+                            <button
+                              className="btn btn-ghost btn-xs btn-square text-error tooltip tooltip-left"
+                              data-tip="Excluir"
+                              onClick={() => setDeleteTarget(item)}
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="size-4"
+                                viewBox="0 0 20 20"
+                                fill="currentColor"
+                              >
+                                <path
+                                  fillRule="evenodd"
+                                  d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                                  clipRule="evenodd"
+                                />
+                              </svg>
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
             </div>
-          )}
-        </div>
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="flex items-center justify-between border-t border-base-200 px-4 py-3">
+                <span className="text-xs text-base-content/50">
+                  Página {page} de {totalPages}
+                </span>
+                <div className="join">
+                  <button
+                    className="join-item btn btn-sm btn-ghost"
+                    disabled={page <= 1}
+                    onClick={() => setPage(page - 1)}
+                  >
+                    ‹ Anterior
+                  </button>
+                  <button
+                    className="join-item btn btn-sm btn-ghost"
+                    disabled={page >= totalPages}
+                    onClick={() => setPage(page + 1)}
+                  >
+                    Próxima ›
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       )}
 
@@ -442,22 +606,59 @@ export function AdminCrudTable<T extends { id: string }>({
                 if (f.type === "coordinates") {
                   const latitudeKey = f.latitudeKey ?? "latitude";
                   const longitudeKey = f.longitudeKey ?? "longitude";
-                  const latitude = formData[latitudeKey] === "" || formData[latitudeKey] == null ? undefined : Number(formData[latitudeKey]);
-                  const longitude = formData[longitudeKey] === "" || formData[longitudeKey] == null ? undefined : Number(formData[longitudeKey]);
+                  const latitude =
+                    formData[latitudeKey] === "" ||
+                    formData[latitudeKey] == null
+                      ? undefined
+                      : Number(formData[latitudeKey]);
+                  const longitude =
+                    formData[longitudeKey] === "" ||
+                    formData[longitudeKey] == null
+                      ? undefined
+                      : Number(formData[longitudeKey]);
                   return (
                     <fieldset key={f.key} className="fieldset">
                       <legend className="fieldset-legend">{f.label}</legend>
-                      <MapCoordinatePicker latitude={latitude} longitude={longitude} onChange={(lat, lng) => { setField(latitudeKey, lat); setField(longitudeKey, lng); }} disabled={saving} />
+                      <MapCoordinatePicker
+                        latitude={latitude}
+                        longitude={longitude}
+                        onChange={(lat, lng) => {
+                          setField(latitudeKey, lat);
+                          setField(longitudeKey, lng);
+                        }}
+                        disabled={saving}
+                      />
                       <div className="mt-2 grid grid-cols-1 gap-3 sm:grid-cols-2">
-                        <Input label="Latitude" type="number" step="any" required={f.required} value={String(formData[latitudeKey] ?? "")} onChange={(e) => setField(latitudeKey, e.target.value)} />
-                        <Input label="Longitude" type="number" step="any" required={f.required} value={String(formData[longitudeKey] ?? "")} onChange={(e) => setField(longitudeKey, e.target.value)} />
+                        <Input
+                          label="Latitude"
+                          type="number"
+                          step="any"
+                          required={f.required}
+                          value={String(formData[latitudeKey] ?? "")}
+                          onChange={(e) =>
+                            setField(latitudeKey, e.target.value)
+                          }
+                        />
+                        <Input
+                          label="Longitude"
+                          type="number"
+                          step="any"
+                          required={f.required}
+                          value={String(formData[longitudeKey] ?? "")}
+                          onChange={(e) =>
+                            setField(longitudeKey, e.target.value)
+                          }
+                        />
                       </div>
                     </fieldset>
                   );
                 }
                 if (f.type === "checkbox") {
                   return (
-                    <label key={f.key} className="flex items-center gap-3 cursor-pointer py-1">
+                    <label
+                      key={f.key}
+                      className="flex items-center gap-3 cursor-pointer py-1"
+                    >
                       <input
                         type="checkbox"
                         className="toggle toggle-primary"
@@ -531,14 +732,26 @@ export function AdminCrudTable<T extends { id: string }>({
           <div className="modal-box max-w-sm">
             <div className="flex flex-col items-center text-center gap-3 py-2">
               <div className="size-12 rounded-full bg-error/10 flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" className="size-6 text-error" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="size-6 text-error"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                  />
                 </svg>
               </div>
               <div>
                 <h3 className="font-bold text-lg">Confirmar exclusão</h3>
                 <p className="text-sm text-base-content/60 mt-1">
-                  Tem certeza que deseja excluir este registro? Esta ação não pode ser desfeita.
+                  Tem certeza que deseja excluir este registro? Esta ação não
+                  pode ser desfeita.
                 </p>
               </div>
             </div>
