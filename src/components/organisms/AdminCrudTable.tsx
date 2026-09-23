@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { Button, Input, Select } from "@/components/atoms";
+import { SearchableSelect } from "@/components/atoms/SearchableSelect";
+import { MapCoordinatePicker } from "@/components/maps/MapCoordinatePicker";
 import type { PaginatedResponse } from "@/types";
 
 export interface Column<T> {
@@ -20,7 +22,9 @@ export interface SelectOption {
 export interface FieldConfig {
   key: string;
   label: string;
-  type?: "text" | "number" | "checkbox" | "select";
+  type?: "text" | "number" | "checkbox" | "select" | "searchable-select" | "coordinates";
+  latitudeKey?: string;
+  longitudeKey?: string;
   required?: boolean;
   placeholder?: string;
   options?: SelectOption[];
@@ -40,6 +44,7 @@ interface AdminCrudTableProps<T extends { id: string }> {
   fields: FieldConfig[];
   service: CrudService<T>;
   description?: string;
+  headerActions?: React.ReactNode;
 }
 
 export function AdminCrudTable<T extends { id: string }>({
@@ -48,6 +53,7 @@ export function AdminCrudTable<T extends { id: string }>({
   fields,
   service,
   description,
+  headerActions,
 }: AdminCrudTableProps<T>) {
   const [items, setItems] = useState<T[]>([]);
   const [page, setPage] = useState(1);
@@ -99,10 +105,15 @@ export function AdminCrudTable<T extends { id: string }>({
 
   useEffect(() => {
     for (const f of fields) {
-      if (f.type === "select" && f.loadOptions && !selectOptions[f.key]) {
-        f.loadOptions().then((opts) =>
-          setSelectOptions((prev) => ({ ...prev, [f.key]: opts })),
-        );
+      if ((f.type === "select" || f.type === "searchable-select") && f.loadOptions && !selectOptions[f.key]) {
+        f.loadOptions()
+          .then((opts) =>
+            setSelectOptions((prev) => ({ ...prev, [f.key]: opts })),
+          )
+          .catch((loadError: unknown) => {
+            const message = (loadError as { message?: string })?.message;
+            setError(message ?? `Erro ao carregar opções de .`);
+          });
       }
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -112,7 +123,12 @@ export function AdminCrudTable<T extends { id: string }>({
     setEditing(null);
     const initial: Record<string, unknown> = {};
     for (const f of fields) {
-      initial[f.key] = f.type === "checkbox" ? false : "";
+      if (f.type === "coordinates") {
+        initial[f.latitudeKey ?? "latitude"] = "";
+        initial[f.longitudeKey ?? "longitude"] = "";
+      } else {
+        initial[f.key] = f.type === "checkbox" ? false : "";
+      }
     }
     setFormData(initial);
     setModalOpen(true);
@@ -122,7 +138,14 @@ export function AdminCrudTable<T extends { id: string }>({
     setEditing(item);
     const data: Record<string, unknown> = {};
     for (const f of fields) {
-      data[f.key] = (item as Record<string, unknown>)[f.key] ?? (f.type === "checkbox" ? false : "");
+      if (f.type === "coordinates") {
+        const latitudeKey = f.latitudeKey ?? "latitude";
+        const longitudeKey = f.longitudeKey ?? "longitude";
+        data[latitudeKey] = (item as Record<string, unknown>)[latitudeKey] ?? "";
+        data[longitudeKey] = (item as Record<string, unknown>)[longitudeKey] ?? "";
+      } else {
+        data[f.key] = (item as Record<string, unknown>)[f.key] ?? (f.type === "checkbox" ? false : "");
+      }
     }
     setFormData(data);
     setModalOpen(true);
@@ -134,6 +157,23 @@ export function AdminCrudTable<T extends { id: string }>({
     try {
       const payload: Record<string, unknown> = {};
       for (const f of fields) {
+        if (f.type === "coordinates") {
+          const latitudeKey = f.latitudeKey ?? "latitude";
+          const longitudeKey = f.longitudeKey ?? "longitude";
+          const latitudeValue = formData[latitudeKey];
+          const longitudeValue = formData[longitudeKey];
+          if (latitudeValue === "" || latitudeValue == null || longitudeValue === "" || longitudeValue == null) {
+            throw new Error("Selecione uma localização no mapa.");
+          }
+          const latitude = Number(latitudeValue);
+          const longitude = Number(longitudeValue);
+          if (!Number.isFinite(latitude) || latitude < -90 || latitude > 90 || !Number.isFinite(longitude) || longitude < -180 || longitude > 180) {
+            throw new Error("Informe coordenadas geográficas válidas.");
+          }
+          payload[latitudeKey] = latitude;
+          payload[longitudeKey] = longitude;
+          continue;
+        }
         const val = formData[f.key];
         if (f.type === "number" && val !== "" && val != null) {
           payload[f.key] = Number(val);
@@ -185,12 +225,15 @@ export function AdminCrudTable<T extends { id: string }>({
             <p className="text-sm text-base-content/60 mt-1">{description}</p>
           )}
         </div>
-        <Button size="sm" onClick={openCreate} className="min-h-11 w-full gap-1 sm:w-auto sm:self-auto">
-          <svg xmlns="http://www.w3.org/2000/svg" className="size-4" viewBox="0 0 20 20" fill="currentColor">
-            <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
-          </svg>
-          Novo registro
-        </Button>
+        <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
+          {headerActions}
+          <Button size="sm" onClick={openCreate} className="min-h-11 w-full gap-1 sm:w-auto sm:self-auto">
+            <svg xmlns="http://www.w3.org/2000/svg" className="size-4" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
+            </svg>
+            Novo registro
+          </Button>
+        </div>
       </div>
 
       {/* Search & Count Bar */}
@@ -379,7 +422,7 @@ export function AdminCrudTable<T extends { id: string }>({
       {/* Create / Edit Modal */}
       {modalOpen && (
         <dialog className="modal modal-open">
-          <div className="modal-box max-w-lg">
+          <div className="modal-box max-w-2xl">
             <button
               className="btn btn-sm btn-circle btn-ghost absolute right-3 top-3"
               onClick={() => setModalOpen(false)}
@@ -396,6 +439,22 @@ export function AdminCrudTable<T extends { id: string }>({
             </p>
             <div className="space-y-4">
               {fields.map((f) => {
+                if (f.type === "coordinates") {
+                  const latitudeKey = f.latitudeKey ?? "latitude";
+                  const longitudeKey = f.longitudeKey ?? "longitude";
+                  const latitude = formData[latitudeKey] === "" || formData[latitudeKey] == null ? undefined : Number(formData[latitudeKey]);
+                  const longitude = formData[longitudeKey] === "" || formData[longitudeKey] == null ? undefined : Number(formData[longitudeKey]);
+                  return (
+                    <fieldset key={f.key} className="fieldset">
+                      <legend className="fieldset-legend">{f.label}</legend>
+                      <MapCoordinatePicker latitude={latitude} longitude={longitude} onChange={(lat, lng) => { setField(latitudeKey, lat); setField(longitudeKey, lng); }} disabled={saving} />
+                      <div className="mt-2 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                        <Input label="Latitude" type="number" step="any" required={f.required} value={String(formData[latitudeKey] ?? "")} onChange={(e) => setField(latitudeKey, e.target.value)} />
+                        <Input label="Longitude" type="number" step="any" required={f.required} value={String(formData[longitudeKey] ?? "")} onChange={(e) => setField(longitudeKey, e.target.value)} />
+                      </div>
+                    </fieldset>
+                  );
+                }
                 if (f.type === "checkbox") {
                   return (
                     <label key={f.key} className="flex items-center gap-3 cursor-pointer py-1">
@@ -407,6 +466,21 @@ export function AdminCrudTable<T extends { id: string }>({
                       />
                       <span className="label-text">{f.label}</span>
                     </label>
+                  );
+                }
+                if (f.type === "searchable-select") {
+                  const opts = f.options ?? selectOptions[f.key] ?? [];
+                  return (
+                    <SearchableSelect
+                      key={f.key}
+                      label={f.label}
+                      options={opts}
+                      placeholder={f.placeholder}
+                      value={String(formData[f.key] ?? "")}
+                      required={f.required}
+                      disabled={saving}
+                      onChange={(value) => setField(f.key, value)}
+                    />
                   );
                 }
                 if (f.type === "select") {

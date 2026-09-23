@@ -24,8 +24,7 @@ const columns: Column<PontoColeta>[] = [
 
 const fields: FieldConfig[] = [
   { key: "nome", label: "Nome", required: true, placeholder: "Nome do ponto" },
-  { key: "latitude", label: "Latitude", type: "number", required: true, placeholder: "-23.5505" },
-  { key: "longitude", label: "Longitude", type: "number", required: true, placeholder: "-46.6333" },
+  { key: "coordenadas", label: "Localização no mapa", type: "coordinates", latitudeKey: "latitude", longitudeKey: "longitude", required: true },
   { key: "raio", label: "Raio (metros)", type: "number", placeholder: "Opcional" },
   { key: "cidadeId", label: "Cidade", type: "select", required: true, placeholder: "Selecione a cidade", loadOptions: loadCidades },
 ];

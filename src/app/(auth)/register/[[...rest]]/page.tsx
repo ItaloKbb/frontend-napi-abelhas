@@ -9,9 +9,9 @@ import { AuthAlert, GoogleIcon, OtpInput, PasswordInput, clerkErrorMessage, useR
 import { ROUTES } from "@/constants";
 
 const target = () => {
-  if (typeof window === "undefined") return ROUTES.AMOSTRAS;
+  if (typeof window === "undefined") return ROUTES.HOME;
   const value = new URLSearchParams(window.location.search).get("redirect_url");
-  return value?.startsWith("/") && !value.startsWith("//") ? value : ROUTES.AMOSTRAS;
+  return value?.startsWith("/") && !value.startsWith("//") ? value : ROUTES.HOME;
 };
 
 export default function RegisterPage() {
