@@ -18,7 +18,7 @@ body { min-width: 320px; }
 
 .break-anywhere { overflow-wrap: anywhere; }
 
- (max-width: 639px) {
+@media (max-width: 639px) {
   .modal { padding: 0.75rem; }
   .modal-box {
     width: 100%;
